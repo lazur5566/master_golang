@@ -1,5 +1,4 @@
 package config
 
-var NWorker = 100
-
-func Test() {}
+const NWorker = 10
+const NRequester = 100

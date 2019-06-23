@@ -3,8 +3,7 @@ package client
 import (
 	"fmt"
 	"math/rand"
-
-	config "/Users/Yifeng/MaterGolang/loadBalancer/config"
+	"time"
 )
 
 type Request struct {
@@ -16,9 +15,12 @@ func Requester(work chan<- Request) {
 	c := make(chan int)
 	for {
 		// Kill some time (fake load).
-		Sleep(rand.Int63n(config.Test() * 2 * Second))
+		//time.Sleep(rand.Int63n(config.NWorker*2) * time.Millisecond)
+		time.Sleep(time.Second)
 		work <- Request{workFn, c} // send request
-		result := <-c              // wait for answer
+		fmt.Println("Client: request sent...")
+		result := <-c // wait for answer
+		fmt.Println("Client: result received...")
 		furtherProcess(result)
 	}
 }
@@ -27,7 +29,7 @@ func workFn() int {
 	fmt.Println("***************")
 	fmt.Println("dispatching work...")
 	fmt.Println("***************")
-	return rand.Int(10)
+	return rand.Intn(10)
 }
 
 func furtherProcess(result int) {
